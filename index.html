@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Complaint Box</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Digital Complaint Box</div>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="home-cards">
+            <div class="card">
+                <h2>Sign Up</h2>
+                <p>Create a new account to start submitting complaints.</p>
+                <a href="signup.html" class="card-btn">Sign Up</a>
+            </div>
+
+            <div class="card">
+                <h2>Login</h2>
+                <p>Access your account to submit and track complaints.</p>
+                <a href="login.html" class="card-btn">Login</a>
+            </div>
+
+            <div class="card">
+                <h2>Submit Complaint</h2>
+                <p>Submit a new complaint anonymously or as a registered user.</p>
+                <a href="submit.html" class="card-btn">Submit Complaint</a>
+            </div>
+
+            <div class="card">
+                <h2>Track Complaint</h2>
+                <p>Track the status of your submitted complaints.</p>
+                <a href="track.html" class="card-btn">Track Complaint</a>
+            </div>
+
+            <div class="card" id="myComplaintsCard" style="display: none;">
+                <h2>My Complaints</h2>
+                <p>View all your submitted complaints and their status.</p>
+                <a href="my_complaints.html" class="card-btn">View My Complaints</a>
+            </div>
+
+            <div class="card">
+                <h2>Admin Login</h2>
+                <p>Access the admin dashboard to manage and analyze complaints.</p>
+                <a href="admin_login.html" class="card-btn">Admin Login</a>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const signupCard = document.querySelector('.card a[href="signup.html"]').parentElement;
+            const loginCard = document.querySelector('.card a[href="login.html"]').parentElement;
+            const adminCard = document.querySelector('.card a[href="admin_login.html"]').parentElement;
+            const submitCard = document.querySelector('.card a[href="submit.html"]').parentElement;
+            const trackCard = document.querySelector('.card a[href="track.html"]').parentElement;
+            const myComplaintsCard = document.getElementById('myComplaintsCard');
+            const nav = document.querySelector('nav');
+
+            try {
+                const response = await fetch('/api/user_complaints');
+                if (response.ok) {
+                    // Logged in: show user options
+                    signupCard.style.display = 'none';
+                    loginCard.style.display = 'none';
+                    adminCard.style.display = 'none';
+                    submitCard.style.display = 'block';
+                    trackCard.style.display = 'block';
+                    myComplaintsCard.style.display = 'block';
+
+                    // Add logout button
+                    const logoutBtn = document.createElement('a');
+                    logoutBtn.href = '#';
+                    logoutBtn.className = 'back-btn';
+                    logoutBtn.textContent = 'Logout';
+                    logoutBtn.addEventListener('click', async function(e) {
+                        e.preventDefault();
+                        await fetch('/api/logout', { method: 'POST' });
+                        location.reload();
+                    });
+                    nav.appendChild(logoutBtn);
+                } else {
+                    // Not logged in: show auth options
+                    signupCard.style.display = 'block';
+                    loginCard.style.display = 'block';
+                    adminCard.style.display = 'block';
+                    submitCard.style.display = 'none';
+                    trackCard.style.display = 'none';
+                    myComplaintsCard.style.display = 'none';
+                }
+            } catch (error) {
+                // Default to not logged in
+                signupCard.style.display = 'block';
+                loginCard.style.display = 'block';
+                adminCard.style.display = 'block';
+                submitCard.style.display = 'none';
+                trackCard.style.display = 'none';
+                myComplaintsCard.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

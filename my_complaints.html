@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Complaints - College Digital Complaint Box</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">College Digital Complaint Box</div>
+            <a href="index.html" class="back-btn">Back to Home</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1 style="text-align: center; margin-bottom: 2rem; color: #00ff88;">My Complaints</h1>
+
+        <div id="complaintsContainer">
+            <p style="text-align: center; color: #888;">Loading your complaints...</p>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/api/user_complaints');
+                if (response.ok) {
+                    const complaints = await response.json();
+                    displayComplaints(complaints);
+                } else if (response.status === 401) {
+                    document.getElementById('complaintsContainer').innerHTML = '<p style="text-align: center; color: #ff6b6b;">Please login to view your complaints.</p>';
+                } else {
+                    document.getElementById('complaintsContainer').innerHTML = '<p style="text-align: center; color: #ff6b6b;">Error loading complaints.</p>';
+                }
+            } catch (error) {
+                document.getElementById('complaintsContainer').innerHTML = '<p style="text-align: center; color: #ff6b6b;">Error: ' + error.message + '</p>';
+            }
+        });
+
+        function displayComplaints(complaints) {
+            const container = document.getElementById('complaintsContainer');
+
+            if (complaints.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #888;">No complaints submitted yet.</p>';
+                return;
+            }
+
+            let html = '<div style="display: grid; gap: 1rem; max-width: 800px; margin: 0 auto;">';
+            complaints.forEach(complaint => {
+                const statusClass = `status-${complaint.status.toLowerCase().replace(' ', '-')}`;
+                html += `
+                    <div class="complaint-card" style="background: #2d2d2d; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #00ff88; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);" data-id="${complaint.complaint_id}">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <div>
+                                <strong style="font-size: 1.1em;">Complaint ID: ${complaint.complaint_id}</strong>
+                            </div>
+                            <div>
+                                <span class="${statusClass}" style="padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: bold;">${complaint.status}</span>
+                                ${complaint.status === 'Pending' ? `<button class="edit-btn" style="margin-left: 1rem; background: #00ff88; color: #000; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer;">Edit</button>` : ''}
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <strong>Category:</strong>
+                            <span class="category-text">${complaint.category}</span>
+                            <select class="category-edit" style="display: none;">
+                                <option value="Academic">Academic</option>
+                                <option value="Facilities">Facilities</option>
+                                <option value="Administration">Administration</option>
+                                <option value="Library">Library</option>
+                                <option value="Hostel">Hostel</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 0.5rem;">
+                            <strong>Submitted:</strong> ${new Date(complaint.submitted_at).toLocaleString()}
+                        </div>
+                        <div>
+                            <strong>Complaint:</strong>
+                            <div class="complaint-text" style="margin-top: 0.5rem; padding: 1rem; background: #1e1e1e; border-radius: 6px; line-height: 1.5;">${complaint.complaint_text}</div>
+                            <textarea class="complaint-edit" style="display: none; width: 100%; min-height: 100px; margin-top: 0.5rem; padding: 1rem; background: #1e1e1e; border: 1px solid #444; border-radius: 6px; color: #e0e0e0;"></textarea>
+                            <div class="edit-actions" style="display: none; margin-top: 1rem;">
+                                <button class="save-btn" style="background: #00ff88; color: #000; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; margin-right: 0.5rem;">Save</button>
+                                <button class="cancel-btn" style="background: #ff6b6b; color: #000; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+
+            // Add event listeners
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.complaint-card');
+                    enterEditMode(card);
+                });
+            });
+
+            document.querySelectorAll('.save-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.complaint-card');
+                    saveEdit(card);
+                });
+            });
+
+            document.querySelectorAll('.cancel-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.complaint-card');
+                    exitEditMode(card);
+                });
+            });
+        }
+
+        function enterEditMode(card) {
+            const categoryText = card.querySelector('.category-text');
+            const categoryEdit = card.querySelector('.category-edit');
+            const complaintText = card.querySelector('.complaint-text');
+            const complaintEdit = card.querySelector('.complaint-edit');
+            const editActions = card.querySelector('.edit-actions');
+
+            categoryEdit.value = categoryText.textContent;
+            complaintEdit.value = complaintText.textContent;
+
+            categoryText.style.display = 'none';
+            complaintText.style.display = 'none';
+            categoryEdit.style.display = 'inline';
+            complaintEdit.style.display = 'block';
+            editActions.style.display = 'block';
+        }
+
+        function exitEditMode(card) {
+            const categoryText = card.querySelector('.category-text');
+            const categoryEdit = card.querySelector('.category-edit');
+            const complaintText = card.querySelector('.complaint-text');
+            const complaintEdit = card.querySelector('.complaint-edit');
+            const editActions = card.querySelector('.edit-actions');
+
+            categoryText.style.display = 'inline';
+            complaintText.style.display = 'block';
+            categoryEdit.style.display = 'none';
+            complaintEdit.style.display = 'none';
+            editActions.style.display = 'none';
+        }
+
+        async function saveEdit(card) {
+            const complaintId = card.dataset.id;
+            const category = card.querySelector('.category-edit').value;
+            const complaintText = card.querySelector('.complaint-edit').value.trim();
+
+            if (!complaintText) {
+                alert('Please enter complaint text.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/edit_complaint', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ complaint_id: complaintId, complaint_text: complaintText, category: category })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    alert('Complaint updated successfully!');
+                    // Update display
+                    card.querySelector('.category-text').textContent = category;
+                    card.querySelector('.complaint-text').textContent = complaintText;
+                    exitEditMode(card);
+                    // Refresh the page to show updated data
+                    location.reload();
+                } else {
+                    alert(result.error || 'Failed to update complaint.');
+                }
+            } catch (error) {
+                alert('Error updating complaint: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Digital Complaint Box</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Digital Complaint Box - Admin Dashboard</div>
+            <div>
+                <a href="index.html" class="back-btn">Back to Home</a>
+                <button id="logoutBtn" class="back-btn" style="margin-left: 1rem;">Logout</button>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="dashboard">
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalComplaints">0</div>
+                    <div class="stat-label">Total Complaints</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="pendingCount" style="color: #ffd700;">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="inProgressCount" style="color: #00bfff;">0</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="resolvedCount" style="color: #00ff88;">0</div>
+                    <div class="stat-label">Resolved</div>
+                </div>
+            </div>
+            
+            <!-- Charts -->
+            <div class="charts">
+                <div class="chart-container">
+                    <h3>Complaints by Category</h3>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Monthly Complaint Trend</h3>
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Complaints Table -->
+        <div class="chart-container" style="margin-top: 2rem;">
+            <h3>All Complaints</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Category</th>
+                        <th>Complaint Text</th>
+                        <th>Submitted At</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="complaintsTable">
+                </tbody>
+            </table>
+        </div>
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="admin_dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Complaint - College Digital Complaint Box</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">College Digital Complaint Box</div>
+            <a href="index.html" class="back-btn">Back to Home</a>
+        </nav>
+    </header>
+    
+    <main>
+        <h1 style="text-align: center; margin-bottom: 2rem; color: #00ff88;">Submit a New College Complaint</h1>
+        
+        <form id="complaintForm">
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                    <option value="">Select a category</option>
+                    <option value="Academic">Academic</option>
+                    <option value="Facilities">Facilities</option>
+                    <option value="Administration">Administration</option>
+                    <option value="Library">Library</option>
+                    <option value="Hostel">Hostel</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="complaintText">Complaint Details</label>
+                <textarea id="complaintText" name="complaint_text" required placeholder="Describe your complaint in detail..."></textarea>
+            </div>
+            
+            <button type="submit" class="submit-btn">Submit Complaint</button>
+        </form>
+        
+        <!-- Success Modal -->
+        <div id="successModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 style="color: #00ff88;">Success!</h2>
+                <p>Your complaint has been submitted successfully.</p>
+                <p>Complaint ID: <span id="complaintId"></span></p>
+                <a href="index.html" class="card-btn">Back to Home</a>
+            </div>
+        </div>
+    </main>
+    
+    <script src="submit.js"></script>
+</body>
+</html>

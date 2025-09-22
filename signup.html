@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Digital Complaint Box</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Digital Complaint Box</div>
+            <a href="index.html" class="back-btn">Back to Home</a>
+        </nav>
+    </header>
+    
+    <main>
+        <h1 style="text-align: center; margin-bottom: 2rem; color: #00ff88;">Create Account</h1>
+        
+        <form id="signupForm" class="login-form">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="username">Username (Optional)</label>
+                <input type="text" id="username" name="username">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required minlength="6">
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirm_password" required>
+            </div>
+            
+            <button type="submit" class="submit-btn">Sign Up</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 1rem;">
+            <a href="login.html" style="color: #00ff88;">Already have an account? Login</a>
+        </p>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('signupForm');
+            
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (!name || !email || !password) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    alert('Password must be at least 6 characters.');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match.');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/signup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ name, email, username, password })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok && result.success) {
+                        alert('Sign up successful! Please login.');
+                        window.location.href = 'login.html';
+                    } else {
+                        alert(result.error || 'Sign up failed. Please try again.');
+                    }
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
