@@ -27,7 +27,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ username, password })
             });
 
-            const result = await response.json();
+            let result;
+            try {
+                result = await response.json();
+            } catch (e) {
+                throw new Error('Invalid response from server');
+            }
 
             if (response.ok && result.success) {
                 // Show success checkmark

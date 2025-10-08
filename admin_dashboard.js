@@ -31,7 +31,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             // Fetch stats
             const statsResponse = await fetch('/api/admin/stats');
-            const stats = await statsResponse.json();
+            let stats;
+            try {
+                stats = await statsResponse.json();
+            } catch (e) {
+                throw new Error('Invalid response from server');
+            }
 
             if (!statsResponse.ok) {
                 alert(stats.error || 'Failed to load stats');
@@ -104,7 +109,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             // Fetch complaints
             const complaintsResponse = await fetch('/api/admin/complaints');
-            const complaints = await complaintsResponse.json();
+            let complaints;
+            try {
+                complaints = await complaintsResponse.json();
+            } catch (e) {
+                throw new Error('Invalid response from server');
+            }
 
             if (!complaintsResponse.ok) {
                 alert(complaints.error || 'Failed to load complaints');
@@ -150,7 +160,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                             body: JSON.stringify({ complaint_id: complaintId, status: newStatus })
                         });
 
-                        const result = await response.json();
+                        let result;
+                        try {
+                            result = await response.json();
+                        } catch (e) {
+                            throw new Error('Invalid response from server');
+                        }
 
                         if (!response.ok) {
                             alert(result.error || 'Failed to update status');

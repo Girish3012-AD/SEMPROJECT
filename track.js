@@ -30,7 +30,12 @@ document.addEventListener('DOMContentLoaded', function() {
             trackBtn.textContent = 'Tracking...';
 
             const response = await fetch(`/api/track_complaint?id=${complaintId}`);
-            const result = await response.json();
+            let result;
+            try {
+                result = await response.json();
+            } catch (e) {
+                throw new Error('Invalid response from server');
+            }
 
             if (response.ok && result.complaint_id) {
                 currentComplaint = result;
@@ -111,7 +116,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                 });
 
-                const result = await response.json();
+                let result;
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    throw new Error('Invalid response from server');
+                }
 
                 if (response.ok && result.success) {
                     alert('Complaint updated successfully!');

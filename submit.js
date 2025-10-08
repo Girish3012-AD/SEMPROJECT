@@ -35,14 +35,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: JSON.stringify(formData)
             });
-            
+
             if (response.status === 401) {
                 alert('Please login to submit a complaint.');
                 window.location.href = 'login.html';
                 return;
             }
 
-            const result = await response.json();
+            let result;
+            try {
+                result = await response.json();
+            } catch (e) {
+                throw new Error('Invalid response from server');
+            }
 
             if (response.ok && result.success) {
                 complaintIdSpan.textContent = result.complaint_id;
