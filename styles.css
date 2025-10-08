@@ -10,8 +10,8 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #1a1a1a;
-    color: #e0e0e0;
+    background-color: #ffffff;
+    color: #333333;
     line-height: 1.6;
     min-height: 100vh;
 }
@@ -21,9 +21,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Header and Navigation */
 header {
-    background-color: #2d2d2d;
+    background-color: #ffffff;
     padding: 1rem 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 nav {
@@ -76,12 +76,12 @@ main {
 }
 
 .card {
-    background-color: #2d2d2d;
+    background-color: #ffffff;
     padding: 2rem;
     border-radius: 10px;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .card:hover {
@@ -96,7 +96,7 @@ main {
 }
 
 .card p {
-    color: #b0b0b0;
+    color: #666666;
     margin-bottom: 1.5rem;
 }
 
@@ -122,10 +122,10 @@ main {
 
 /* Forms */
 form {
-    background-color: #2d2d2d;
+    background-color: #ffffff;
     padding: 2rem;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-width: 600px;
     margin: 0 auto;
 }
@@ -138,7 +138,7 @@ label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
-    color: #e0e0e0;
+    color: #333333;
 }
 
 input[type="text"],
@@ -148,10 +148,10 @@ select,
 textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #444;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #3a3a3a;
-    color: #e0e0e0;
+    background-color: #f0f0f0;
+    color: #333333;
     font-size: 1rem;
     transition: border-color 0.3s ease;
 }
@@ -198,7 +198,7 @@ textarea {
 
 /* Track page */
 .track-result {
-    background-color: #2d2d2d;
+    background-color: #ffffff;
     padding: 2rem;
     border-radius: 10px;
     margin-top: 2rem;
@@ -241,11 +241,11 @@ textarea {
 }
 
 .stat-card {
-    background-color: #2d2d2d;
+    background-color: #ffffff;
     padding: 1.5rem;
     border-radius: 10px;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .stat-number {
@@ -255,7 +255,7 @@ textarea {
 }
 
 .stat-label {
-    color: #b0b0b0;
+    color: #666666;
     margin-top: 0.5rem;
 }
 
@@ -268,10 +268,10 @@ textarea {
 }
 
 .chart-container {
-    background-color: #2d2d2d;
+    background-color: #ffffff;
     padding: 1.5rem;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .chart-container h3 {
@@ -284,40 +284,40 @@ textarea {
 table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #2d2d2d;
+    background-color: #ffffff;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid #444;
+    border-bottom: 1px solid #ccc;
 }
 
 th {
-    background-color: #3a3a3a;
+    background-color: #f0f0f0;
     color: #00ff88;
     font-weight: 600;
 }
 
 tr:hover {
-    background-color: #3a3a3a;
+    background-color: #f0f0f0;
 }
 
 .status-select {
-    background-color: #3a3a3a;
-    color: #e0e0e0;
-    border: 1px solid #444;
+    background-color: #f0f0f0;
+    color: #333333;
+    border: 1px solid #ccc;
     border-radius: 5px;
     padding: 0.5rem;
     font-size: 0.9rem;
 }
 
 .status-select option {
-    background-color: #2d2d2d;
-    color: #e0e0e0;
+    background-color: #ffffff;
+    color: #333333;
 }
 
 /* Modal for success messages */
@@ -334,14 +334,14 @@ tr:hover {
 }
 
 .modal-content {
-    background-color: #2d2d2d;
+    background-color: #ffffff;
     margin: 15% auto;
     padding: 2rem;
     border-radius: 10px;
     width: 80%;
     max-width: 500px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
 }
 
 .close {
