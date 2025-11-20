@@ -3,6 +3,6 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python run.py"
+    "startCommand": "gunicorn run:app"
   }
 }
