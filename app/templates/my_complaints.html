@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}My Complaints - Digital Complaint Box{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <div style="padding: 1.5rem; border-bottom: 1px solid var(--border);">
+        <h2 style="font-size: 1.25rem; color: var(--text-main);">My Complaints History</h2>
+    </div>
+    <table id="complaintsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be populated by JS -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100;">
+    <div class="form-container" style="margin-top: 10vh;">
+        <div class="form-header">
+            <h2>Edit Complaint</h2>
+            <span class="close" style="cursor: pointer; position: absolute; right: 2rem; top: 2rem;">&times;</span>
+        </div>
+        <form id="editForm">
+            <input type="hidden" id="edit_complaint_id">
+            <div class="form-group">
+                <label for="edit_category">Category</label>
+                <select id="edit_category" class="form-control" required>
+                    <option value="Hostel">Hostel</option>
+                    <option value="Academics">Academics</option>
+                    <option value="Infrastructure">Infrastructure</option>
+                    <option value="Mess/Canteen">Mess/Canteen</option>
+                    <option value="Administration">Administration</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="edit_complaint_text">Description</label>
+                <textarea id="edit_complaint_text" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Complaint</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        try {
+            const response = await fetch('/api/user_complaints');
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.location.href = '/login.html';
+                    return;
+                }
+                throw new Error('Failed to fetch complaints');
+            }
+
+            const complaints = await response.json();
+            const tbody = document.querySelector('#complaintsTable tbody');
+            tbody.innerHTML = '';
+
+            complaints.forEach(complaint => {
+                const tr = document.createElement('tr');
+
+                let statusClass = '';
+                if (complaint.status === 'Pending') statusClass = 'status-pending';
+                else if (complaint.status === 'In Progress') statusClass = 'status-in-progress';
+                else if (complaint.status === 'Resolved') statusClass = 'status-resolved';
+
+                tr.innerHTML = `
+                <td>#${complaint.complaint_id}</td>
+                <td>${complaint.category}</td>
+                <td>${complaint.complaint_text.substring(0, 50)}${complaint.complaint_text.length > 50 ? '...' : ''}</td>
+                <td><span class="status-badge ${statusClass}">${complaint.status}</span></td>
+                <td>${new Date(complaint.submitted_at).toLocaleDateString()}</td>
+                <td>
+                    ${complaint.status === 'Pending' ?
+                        `<button onclick="openEditModal(${complaint.complaint_id}, '${complaint.category}', '${complaint.complaint_text.replace(/'/g, "\\'")}')" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.85rem;">Edit</button>`
+                        : '<span style="color: var(--text-muted); font-size: 0.85rem;">No actions</span>'}
+                </td>
+            `;
+                tbody.appendChild(tr);
+            });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    // Modal Logic
+    const modal = document.getElementById('editModal');
+    const closeBtn = document.querySelector('.close');
+
+    closeBtn.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    window.openEditModal = function (id, category, text) {
+        document.getElementById('edit_complaint_id').value = id;
+        document.getElementById('edit_category').value = category;
+        document.getElementById('edit_complaint_text').value = text;
+        modal.style.display = "block";
+    }
+
+    document.getElementById('editForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const id = document.getElementById('edit_complaint_id').value;
+        const category = document.getElementById('edit_category').value;
+        const text = document.getElementById('edit_complaint_text').value;
+
+        try {
+            const response = await fetch('/api/edit_complaint', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    complaint_id: id,
+                    category: category,
+                    complaint_text: text
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Complaint updated successfully');
+                modal.style.display = "none";
+                location.reload();
+            } else {
+                alert(result.error || 'Update failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred');
+        }
+    });
+</script>
+{% endblock %}

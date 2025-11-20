@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <h1>Your Voice Matters</h1>
+    <p>A secure and efficient way to submit and track your complaints. We are here to listen and resolve your issues.
+    </p>
+</section>
+
+<section class="features-grid">
+    <div class="card">
+        <h2>Submit Complaint</h2>
+        <p>Have an issue? Submit a complaint easily and we'll look into it immediately.</p>
+        <a href="/submit.html" class="card-btn">Get Started</a>
+    </div>
+
+    <div class="card">
+        <h2>Track Status</h2>
+        <p>Stay updated with real-time status tracking of your submitted complaints.</p>
+        <a href="/track.html" class="card-btn">Track Now</a>
+    </div>
+
+    <div class="card">
+        <h2>Secure & Private</h2>
+        <p>Your data is encrypted and handled with the utmost privacy and security.</p>
+        <span class="card-btn">Learn More</span>
+    </div>
+</section>
+{% endblock %}

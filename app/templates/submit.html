@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Complaint - Digital Complaint Box{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-header">
+        <h2>Submit a Complaint</h2>
+        <p style="color: var(--text-muted);">Please provide details about your issue</p>
+    </div>
+
+    <form id="submitForm">
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" class="form-control" required>
+                <option value="">Select a category</option>
+                <option value="Hostel">Hostel</option>
+                <option value="Academics">Academics</option>
+                <option value="Infrastructure">Infrastructure</option>
+                <option value="Mess/Canteen">Mess/Canteen</option>
+                <option value="Administration">Administration</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="complaint_text">Description</label>
+            <textarea id="complaint_text" name="complaint_text" class="form-control"
+                placeholder="Describe your issue in detail..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Complaint</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/submit.js') }}"></script>
+{% endblock %}

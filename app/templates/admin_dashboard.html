@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Digital Complaint Box{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <div class="sidebar">
+        <div class="card">
+            <h2>Overview</h2>
+            <div class="stats-grid" style="grid-template-columns: 1fr; gap: 1rem;">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalComplaints">-</div>
+                    <div class="stat-label">Total Complaints</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pendingComplaints" style="color: #d97706;">-</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="resolvedComplaints" style="color: #16a34a;">-</div>
+                    <div class="stat-label">Resolved</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Analytics</h3>
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <div class="card" style="margin-bottom: 2rem;">
+            <h2>Recent Complaints</h2>
+            <div style="overflow-x: auto;">
+                <table id="adminComplaintsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Status Update Modal -->
+<div id="statusModal" class="modal"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100;">
+    <div class="form-container" style="margin-top: 10vh;">
+        <div class="form-header">
+            <h2>Update Status</h2>
+            <span class="close" style="cursor: pointer; position: absolute; right: 2rem; top: 2rem;">&times;</span>
+        </div>
+        <form id="statusForm">
+            <input type="hidden" id="update_complaint_id">
+            <div class="form-group">
+                <label>Current Status: <span id="current_status_display" style="font-weight: bold;"></span></label>
+            </div>
+            <div class="form-group">
+                <label for="new_status">New Status</label>
+                <select id="new_status" class="form-control" required>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Resolved">Resolved</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Status</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+{% endblock %}
