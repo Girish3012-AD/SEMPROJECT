@@ -492,34 +492,51 @@ def update_complaint_status():
     data = request.json
     complaint_id = data.get('complaint_id')
     status = data.get('status')
-    
+
     if not complaint_id or status not in ['Pending', 'In Progress', 'Resolved']:
         return jsonify({'error': 'Invalid complaint_id or status'}), 400
-    
+
     try:
         complaint_id = int(complaint_id)
     except ValueError:
         return jsonify({'error': 'Invalid Complaint ID'}), 400
-    
+
     conn = get_db_connection()
     if conn is None:
         return jsonify({'error': 'Database connection failed'}), 500
-    
+
     cursor = conn.cursor()
-    
+
     try:
+        # First check current status
+        cursor.execute("SELECT status FROM complaints WHERE complaint_id = ?", (complaint_id,))
+        row = cursor.fetchone()
+
+        if not row:
+            return jsonify({'error': 'Complaint not found'}), 404
+
+        current_status = row[0]
+
+        # Prevent status changes once moved from Pending
+        if current_status != 'Pending':
+            return jsonify({'error': 'Cannot change status of complaints that are already in progress or resolved'}), 400
+
+        # Only allow forward progression from Pending
+        if status == 'Pending':
+            return jsonify({'error': 'Cannot set status back to Pending'}), 400
+
         cursor.execute("""
-            UPDATE complaints 
+            UPDATE complaints
             SET status = ?, updated_at = datetime('now')
             WHERE complaint_id = ?
         """, (status, complaint_id))
-        
+
         if cursor.rowcount == 0:
-            return jsonify({'error': 'Complaint not found'}), 404
-        
+            return jsonify({'error': 'Failed to update complaint'}), 500
+
         conn.commit()
         return jsonify({'success': True})
-    
+
     except Exception as e:
         conn.rollback()
         return jsonify({'error': str(e)}), 500

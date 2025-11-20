@@ -127,6 +127,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             complaints.forEach(complaint => {
                 const row = document.createElement('tr');
+                const isEditable = complaint.status === 'Pending';
                 row.innerHTML = `
                     <td>${complaint.complaint_id}</td>
                     <td>${complaint.name}</td>
@@ -135,18 +136,19 @@ document.addEventListener('DOMContentLoaded', async function() {
                     <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${complaint.complaint_text}</td>
                     <td>${new Date(complaint.submitted_at).toLocaleString()}</td>
                     <td>
-                        <select class="status-select" data-id="${complaint.complaint_id}">
+                        <select class="status-select" data-id="${complaint.complaint_id}" data-original-status="${complaint.status}" ${isEditable ? '' : 'disabled'}>
                             <option value="Pending" ${complaint.status === 'Pending' ? 'selected' : ''}>Pending</option>
                             <option value="In Progress" ${complaint.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
                             <option value="Resolved" ${complaint.status === 'Resolved' ? 'selected' : ''}>Resolved</option>
                         </select>
+                        ${!isEditable ? '<small style="color: #888; margin-left: 5px;">(Final)</small>' : ''}
                     </td>
                 `;
                 tbody.appendChild(row);
             });
 
-            // Add event listeners to status selects
-            document.querySelectorAll('.status-select').forEach(select => {
+            // Add event listeners to status selects (only for editable ones)
+            document.querySelectorAll('.status-select:not([disabled])').forEach(select => {
                 select.addEventListener('change', async function() {
                     const complaintId = this.dataset.id;
                     const newStatus = this.value;
@@ -170,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                         if (!response.ok) {
                             alert(result.error || 'Failed to update status');
                             // Revert select
-                            this.value = complaint.status; // Assuming original status stored, but for simplicity, reload
+                            this.value = this.getAttribute('data-original-status') || 'Pending';
                         } else {
                             alert('Status updated successfully!');
                             // Refresh data
@@ -178,7 +180,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                         }
                     } catch (error) {
                         alert('Error updating status: ' + error.message);
-                        this.value = complaint.status; // Revert
+                        this.value = this.getAttribute('data-original-status') || 'Pending';
                     }
                 });
             });
