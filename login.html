@@ -85,11 +85,18 @@
                     const result = await response.json();
                     
                     if (response.ok && result.success) {
-                        // Show welcome message
-                        showWelcomeMessage();
-                        setTimeout(() => {
-                            window.location.href = 'my_complaints.html';
-                        }, 2000);
+                        if (result.type === 'admin') {
+                            // Admin login
+                            setTimeout(() => {
+                                window.location.href = 'admin_dashboard.html';
+                            }, 1000);
+                        } else {
+                            // User login
+                            showWelcomeMessage();
+                            setTimeout(() => {
+                                window.location.href = 'my_complaints.html';
+                            }, 2000);
+                        }
                     } else {
                         alert(result.error || 'Login failed. Please try again.');
                     }

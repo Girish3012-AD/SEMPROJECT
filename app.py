@@ -106,13 +106,11 @@ def require_user(f):
     return decorated_function
 @app.before_request
 def log_request():
-    print(f"Request: {request.method} {request.url}")
+    print("Request:", request.method, request.url.encode("utf-8", "replace").decode("utf-8"))
 
 @app.route('/')
 def index():
-    print(f"Serving index.html from directory: {os.getcwd()}")
     if not os.path.exists('index.html'):
-        print("ERROR: index.html not found")
         return "File not found", 404
     return send_from_directory('.', 'index.html')
 
@@ -589,4 +587,4 @@ def get_admin_stats():
         conn.close()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='localhost', port=8000, debug=True)
