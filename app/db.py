@@ -1,4 +1,5 @@
 import sqlite3
+
 from flask import g
 from config import Config
 
